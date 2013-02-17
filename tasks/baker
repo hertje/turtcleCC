@@ -1,0 +1,50 @@
+os.loadAPI ('usr/share/move')
+
+print ('iets')
+function plant ()
+	if ( not turtle.select (1) ) then return false end
+	if ( not turtle.placeDown () ) then return false end
+	if ( not turtle.select (2) ) then return false end
+	if ( not turtle.placeDown () ) then return false end
+	return true
+end
+
+function redstonePulse (side)
+	if ( not side ) then side = 'front' end
+
+	redstone.setOutput (side, true)
+	os.sleep (1)
+	redstone.setOutput (side, false)
+	return true
+end
+
+
+function run ()
+	print ('doing run')
+	local count = 0
+
+	while count < 8 do
+		print ('inside run loop')
+		if ( not move.forward () ) then return false end
+		if ( not plant () ) then return false end
+		count = count + 1
+		print (count)
+		print ('end of run loop')
+	end
+
+	if ( not move.back (8) ) then return false end
+
+	redstonePulse ('bottom')
+	os.sleep (10)
+	redstonePulse ('bottom')
+	return true
+end
+
+function main ()
+	local success = true
+	while success do
+		success = run ()
+	end
+end
+
+main ()
