@@ -1,0 +1,73 @@
+os.loadAPI ('usr/share/move')
+
+function singleRow (length)
+	if ( (not length) or length == 0 ) then return false end
+
+	local count = 0
+	while count < length do
+		-- if digging did not succeed, it's not a big deal, the sugarcane probabli did not
+		-- grow.
+		turtle.dig ()
+		if ( not move.forward () ) then return false end
+		turtle.digDown ()
+
+		count = count + 1
+	end
+
+	if ( not move.forward () ) then return false end
+
+	return true
+end
+
+function doubleRow (length)
+	if ( not singleRow (length) ) then return false end
+	move.turnLeft ()
+	if ( not move.forward () ) then return false end
+	move.turnLeft ()
+	if (not singleRow (length) ) then return false end
+	return true
+end
+
+function field (nrOfDoubleRows, length )
+	local count = 0
+	local success = true
+
+	while count < nrOfDoubleRows and success do
+		success = doubleRow (length)
+		if ( not success ) then break end
+
+		move.turnRight ()
+		if ( not move.forward (2) ) then return false end
+		move.turnRight ()
+
+		count = count + 1
+	end
+	return true
+end
+
+function main (nrOfDoubleRows, length)
+	local success = true
+	local waitTime = 20 * 60
+
+	while success do
+		local startTime = os.clock ()
+
+		success = field (nrOfDoubleRows, length)
+		if ( not success ) then break end
+
+		turtle.dropDown ()
+		move.right (nrOfDoubleRows*3)
+
+		local endTime = os.clock ()
+		local timeDelta = endTime - startTime
+
+		if ( timeDelta < waitTime ) then
+			sleepTime = waitTime - timeDelta
+			os.sleep (sleepTime)
+		end
+	end
+end
+
+print ('starting')
+main (3, 10)
+print ('done')
