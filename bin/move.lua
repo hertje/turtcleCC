@@ -8,13 +8,8 @@ if ( #arguments == 0 ) then return 1 end
 
 if options['n'] then
 	count = options['n']
-	print (type (count))
-	print (type (type (count)))
 	if type(count) == "boolean" then
-		print ("looking for number")
 		count = arguments[2]
-		print (type (count))
-		print (count)
 	end
 	-- all values in options are strings, but adding 0 to it will make it an int.
 	count = count + 0
@@ -47,5 +42,3 @@ end
 
 move._store ()
 print ('to:', move.position())
-
-
